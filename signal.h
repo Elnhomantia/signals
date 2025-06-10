@@ -13,6 +13,7 @@ template<typename... Args>
 class Connection
 {
 friend class Signal<Args...>;
+    using idType = Signal<Args...>::idType;
 
 public:
     Connection() = default;
@@ -60,10 +61,10 @@ public:
     }
 
 private:
-    Connection(Signal<Args...> * s, unsigned int id) : sig(s), id(id) {}
+    Connection(Signal<Args...> * s, idType id) : sig(s), id(id) {}
 
     bool isConnected;
-    unsigned int id;
+    idType id;
     Signal<Args...> * sig;
 
 };
@@ -72,53 +73,72 @@ template<typename... Args>
 class Signal
 {
 friend class Connection<Args...>;
+using idType = unsigned int;
 
-struct SlotType{
+struct MethodType
+{
     std::function<void(Args...)> func;
     bool isBlocked = false;
 };
 
 public:
-    Signal();
+    Signal() = default;
 
+    /**
+     * @brief Connect a free method or a lambda to a signal.
+     * @param method Free method.
+     */
     template<typename F>
-    Connection<Args...> connect(F&& slot)
+    Connection<Args...> connect(F&& method)
     {
         static_assert(std::is_invocable_r_v<void, F, Args...>,
-                      "Slot function must be invocable with signal arguments and return void.");
+                      "Method must be invocable with signal arguments and return void.");
 
         std::lock_guard<std::mutex> lock(mtx);
-        unsigned int id = this->nextId++;
-        this->slots.emplace(id, std::forward<F>(slot));
+        idType id = this->getNewId();
+        this->methods.emplace(id, std::forward<F>(method));
         return Connection(this, id);
     }
 
+    /**
+     * @brief Connect a class method to a signal.
+     * @param instance Class object.
+     * @param method Class method.
+     */
     template<typename T, typename Method>
-    Connection<Args...> connect(T * instance, Method method)
+    Connection<Args...> connect(T * instance, Method&& method)
     {
         static_assert(std::is_member_function_pointer_v<Method>,
                       "Second argument must be a pointer to a member function.");
 
-        auto bound = [instance, method](Args... args) {(instance->*method)(args...);};
+        auto bound = [instance, method](Args... args) -> void {(instance->*method)(args...);};
 
         return connect(bound);
     }
 
+    /**
+     * @brief Connect a class method to a signal. Will auto disconnect if instance is not valid anymore.
+     * @param instance Shared pointer to the class object.
+     * @param method The class method.
+     */
     template<typename T, typename Method>
-    Connection<Args...> connect(std::shared_ptr<T> instance, Method method)
+    requires std::is_member_function_pointer_v<std::decay_t<Method>>
+    Connection<Args...> connect(std::shared_ptr<T> instance, Method&& method)
     {
         static_assert(std::is_invocable_r_v<void, Method, T*, Args...>,
-                      "Slot function must be invocable with signal arguments and return void.");
-        static_assert(std::is_member_function_pointer_v<Method>,
-                      "Second argument must be a pointer to a member function.");
+                      "Method must be invocable with signal arguments and return void.");
 
         std::lock_guard<std::mutex> lock(mtx);
         std::weak_ptr<T> wp(instance);
-        unsigned int id = this->nextId++;
+        idType id = this->getNewId();
 
         auto bound = [wp, method, id, this](Args... args) {
             if(auto sp = wp.lock())
             {
+                //instance can't become invalide here, we made a shared from a weak ptr.
+                //=> we can be the last to reference the instance
+                //=> instance will be destroy at the end of this fonction in that case
+                //+ this lambda will be disconected next time.
                 ((*sp).*method)(args...);
             }
             else
@@ -127,53 +147,107 @@ public:
             }
         };
 
-        this->slots.emplace(id, std::move(bound));
+        this->methods.emplace(id, std::move(bound));
         return Connection<Args...>(this, id);
     }
 
-    template<typename T, typename... BoundArgs>
-    Connection<Args...> connect(void(T::*method)(BoundArgs..., Args...), T* instance, BoundArgs&&... boundArgs)
+    /**
+     * @brief Connect a method and bound its aguments from left to right.
+     * @param method Free method or lambda. Must return void and have the same parameters as the signal.
+     * @param boundArgs Values to bound arguments to.
+     */
+    template<typename Method, typename... BoundArgs>
+    Connection<Args...> connectBind(Method&& method, BoundArgs&&... boundArgs)
     {
-        auto bound = std::bind_front(method, instance, std::forward<BoundArgs>(boundArgs)...);
-        return connect(bound);
+        static_assert(std::is_invocable_v<std::remove_reference_t<Method>, BoundArgs..., Args...>,
+                      "Unbounded aguments, method must be invocable with signal arguments and return void.");
+        auto bound = std::bind_front(method, std::forward<BoundArgs>(boundArgs)...);
+        return connect(std::move(bound));
     }
 
+    /**
+     * @brief Connect a class method and bound its aguments from left to right.
+     * @param instance Class instance.
+     * @param method Class method.
+     * @param boundArgs Values to bound arguments to.
+     */
+    template<typename T, typename Method, typename... BoundArgs>
+    requires std::is_member_function_pointer_v<std::decay_t<Method>>
+    Connection<Args...> connectBind(T* instance, Method&& method, BoundArgs&&... boundArgs)
+    {
+        //method can be typed T::* or T::*&
+        static_assert(std::is_member_function_pointer_v<std::decay_t<Method>>,
+                      "Method must be a pointer to member function.");
+        static_assert(std::is_invocable_v<std::remove_reference_t<Method>, T*, BoundArgs..., Args...>,
+                      "Unbounded aguments, method must be invocable with signal arguments and return void.");
+        auto bound = std::bind_front(method, instance, std::forward<BoundArgs>(boundArgs)...);
+        return connect(std::move(bound));
+    }
+
+    /**
+     * @brief Connect a class method and bound its aguments from left to right. Will auto disconnect if instance is not valid anymore.
+     * @param instance Shared pointer to class instance.
+     * @param method Class method.
+     * @param boundArgs Values to bound arguments to.
+     */
+    template<typename T, typename Method, typename... BoundArgs>
+    Connection<Args...> connectBind(std::shared_ptr<T> instance, Method&& method, BoundArgs&&... boundArgs)
+    {
+        static_assert(std::is_invocable_v<decltype(method), T*, BoundArgs..., Args...>,
+                      "Unbounded aguments, method must be invocable with signal arguments and return void.");
+
+        auto bound = std::bind_front(method, std::forward<BoundArgs>(boundArgs)...);
+        return connect(instance,[bound = std::move(bound)](T* self, Args... args){
+            std::invoke(bound, self, args...);
+        });
+    }
+
+    /**
+     * @brief emit Call all connected methods.
+     * @param args Parameters of registered methods.
+     */
     void emit(Args... args)
     {
         std::unique_lock<std::mutex> lock(mtx);
-        auto copy = this->slots;
+        auto copy = this->methods;
         lock.unlock();
-        for(auto & [id, slot]: copy)
+        for(auto & [id, method]: copy)
         {
-            if(!slot.isBlocked)
+            if(!method.isBlocked)
             {
-                slot.func(args...);
+                method.func(args...);
             }
         }
     }
+
+    /**
+     * @brief disconnectAll Disconnect all methods
+     */
     void disconnectAll()
     {
         std::lock_guard<std::mutex> lock(mtx);
-        this->slots.erase();
+        this->methods.erase();
     }
 
 private:
-    unsigned int nextId = 0;
+    idType nextId = 0;
     std::mutex mtx;
-    std::unordered_map<unsigned int, SlotType> slots;
+    std::unordered_map<idType, MethodType> methods;
 
-    void disconnect(unsigned int id)
+    idType getNewId() { return this->nextId++; }
+
+    void disconnect(idType id)
     {
         std::lock_guard<std::mutex> lock(mtx);
-        this->slots.erase(id);
+        this->methods.erase(id);
     }
 
 
-    void setBlocked(unsigned int id, bool blocked)
+    void setBlocked(idType id, bool blocked)
     {
         std::lock_guard<std::mutex> lock(mtx);
-        auto it = this->slots.find(id);
-        if(it != this->slots.end())
+        auto it = this->methods.find(id);
+        if(it != this->methods.end())
         {
             it.second.isBlocked = blocked;
         }
