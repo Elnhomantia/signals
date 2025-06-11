@@ -13,7 +13,7 @@ template<typename... Args>
 class Connection
 {
 friend class Signal<Args...>;
-    using idType = Signal<Args...>::idType;
+using idType = Signal<Args...>::idType;
 
 public:
     Connection() = default;
@@ -69,11 +69,27 @@ private:
 
 };
 
+namespace SignalConcepts {
+
+    template <typename Method, typename... AllArgs>
+    concept ValidMethod =
+        std::is_invocable_v<std::remove_reference_t<Method>, AllArgs...>
+    ;
+
+    template <typename T, typename Method, typename ...AllArgs>
+    concept ValidClassMethod =
+        std::is_invocable_v<std::remove_reference_t<Method>, T*, AllArgs...> &&
+        std::is_member_function_pointer_v<std::decay_t<Method>>
+    ;
+}
+
 template<typename... Args>
 class Signal
 {
 friend class Connection<Args...>;
 using idType = unsigned int;
+
+
 
 struct MethodType
 {
@@ -88,15 +104,13 @@ public:
      * @brief Connect a free method or a lambda to a signal.
      * @param method Free method.
      */
-    template<typename F>
-    Connection<Args...> connect(F&& method)
+    template<typename Method>
+    requires SignalConcepts::ValidMethod<Method, Args...>
+    Connection<Args...> connect(Method&& method) noexcept
     {
-        static_assert(std::is_invocable_r_v<void, F, Args...>,
-                      "Method must be invocable with signal arguments and return void.");
-
         std::lock_guard<std::mutex> lock(mtx);
         idType id = this->getNewId();
-        this->methods.emplace(id, std::forward<F>(method));
+        this->methods.emplace(id, std::forward<Method>(method));
         return Connection(this, id);
     }
 
@@ -106,11 +120,9 @@ public:
      * @param method Class method.
      */
     template<typename T, typename Method>
-    Connection<Args...> connect(T * instance, Method&& method)
+    requires SignalConcepts::ValidClassMethod<T, Method, Args...>
+    Connection<Args...> connect(T* instance, Method&& method) noexcept
     {
-        static_assert(std::is_member_function_pointer_v<Method>,
-                      "Second argument must be a pointer to a member function.");
-
         auto bound = [instance, method](Args... args) -> void {(instance->*method)(args...);};
 
         return connect(bound);
@@ -122,12 +134,9 @@ public:
      * @param method The class method.
      */
     template<typename T, typename Method>
-    requires std::is_member_function_pointer_v<std::decay_t<Method>>
-    Connection<Args...> connect(std::shared_ptr<T> instance, Method&& method)
+    requires SignalConcepts::ValidClassMethod<T, Method, Args...>
+    Connection<Args...> connect(std::shared_ptr<T> instance, Method&& method) noexcept
     {
-        static_assert(std::is_invocable_r_v<void, Method, T*, Args...>,
-                      "Method must be invocable with signal arguments and return void.");
-
         std::lock_guard<std::mutex> lock(mtx);
         std::weak_ptr<T> wp(instance);
         idType id = this->getNewId();
@@ -157,10 +166,9 @@ public:
      * @param boundArgs Values to bound arguments to.
      */
     template<typename Method, typename... BoundArgs>
-    Connection<Args...> connectBind(Method&& method, BoundArgs&&... boundArgs)
+    requires SignalConcepts::ValidMethod<Method, Args..., BoundArgs...>
+    Connection<Args...> connect(Method&& method, BoundArgs&&... boundArgs) noexcept
     {
-        static_assert(std::is_invocable_v<std::remove_reference_t<Method>, BoundArgs..., Args...>,
-                      "Unbounded aguments, method must be invocable with signal arguments and return void.");
         auto bound = std::bind_front(method, std::forward<BoundArgs>(boundArgs)...);
         return connect(std::move(bound));
     }
@@ -172,14 +180,9 @@ public:
      * @param boundArgs Values to bound arguments to.
      */
     template<typename T, typename Method, typename... BoundArgs>
-    requires std::is_member_function_pointer_v<std::decay_t<Method>>
-    Connection<Args...> connectBind(T* instance, Method&& method, BoundArgs&&... boundArgs)
+    requires SignalConcepts::ValidClassMethod<T, Method, Args..., BoundArgs...>
+    Connection<Args...> connect(T* instance, Method&& method, BoundArgs&&... boundArgs)
     {
-        //method can be typed T::* or T::*&
-        static_assert(std::is_member_function_pointer_v<std::decay_t<Method>>,
-                      "Method must be a pointer to member function.");
-        static_assert(std::is_invocable_v<std::remove_reference_t<Method>, T*, BoundArgs..., Args...>,
-                      "Unbounded aguments, method must be invocable with signal arguments and return void.");
         auto bound = std::bind_front(method, instance, std::forward<BoundArgs>(boundArgs)...);
         return connect(std::move(bound));
     }
@@ -191,11 +194,9 @@ public:
      * @param boundArgs Values to bound arguments to.
      */
     template<typename T, typename Method, typename... BoundArgs>
-    Connection<Args...> connectBind(std::shared_ptr<T> instance, Method&& method, BoundArgs&&... boundArgs)
+    requires SignalConcepts::ValidClassMethod<T, Method, Args..., BoundArgs...>
+    Connection<Args...> connect(std::shared_ptr<T> instance, Method&& method, BoundArgs&&... boundArgs)
     {
-        static_assert(std::is_invocable_v<decltype(method), T*, BoundArgs..., Args...>,
-                      "Unbounded aguments, method must be invocable with signal arguments and return void.");
-
         auto bound = std::bind_front(method, std::forward<BoundArgs>(boundArgs)...);
         return connect(instance,[bound = std::move(bound)](T* self, Args... args){
             std::invoke(bound, self, args...);
