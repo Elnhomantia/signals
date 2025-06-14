@@ -30,10 +30,10 @@ int main()
     Signal<int> s1;
 
     Connection<int> c0 = s1.connect(&testFree);
-    Connection<int> c1 = s1.connect([=](int i){ cout << "Lambda function test : " << i << endl; });
+    Connection<int> c1 = s1.connect([](int i){ cout << "Lambda function test : " << i << endl; });
 
     Connection<int> c2 = s1.connect(&testBindFree, "3.2f");
-    Connection<int> c3 = s1.connect([=](string f, int i){ cout << "Lambda binding test : " << f << " " << i << endl; }, "3.2f");
+    Connection<int> c3 = s1.connect([](string f, int i){ cout << "Lambda binding test : " << f << " " << i << endl; }, "3.2f");
 
     Foo f;
     Connection<int> c4 = s1.connect(&f, &Foo::testClass);

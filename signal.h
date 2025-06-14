@@ -135,8 +135,8 @@ namespace SignalConcepts {
      */
     template <typename T, typename Method, typename ...AllArgs>
     concept ValidClassMethod =
-        std::is_invocable_v<std::remove_reference_t<Method>, T*, AllArgs...> &&
-        std::is_member_function_pointer_v<std::decay_t<Method>>
+        std::is_invocable_v<std::remove_reference_t<Method>, T*, AllArgs...>
+     && std::is_member_function_pointer_v<std::decay_t<Method>>
     ;
 }
 
@@ -169,8 +169,8 @@ public:
     Signal() = default;
 
     /**
-     * @brief Connect a free method or a lambda to a signal.
-     * @param method Free method or lambda.
+     * @brief Connect a static method or a lambda to a signal.
+     * @param method Static method or lambda.
      * @return A @ref Connection. Must be kept or the signal might be automatically disconected.
      *
      * @code{.cpp}
@@ -179,16 +179,17 @@ public:
      * void main() {
      *  Signal<int> s;
      *  Foo foo;
-     *  s.connect(&f);
+     *  Connection c = s.connect(&f);
      *  //or
-     *  s.connect(f);
+     *  Connection c = s.connect(f);
      *  //or
-     *  s.connect([](int){ ... });
+     *  Connection c = s.connect([](int){ ... });
      * }
      * @endcode
      */
     template<typename Method>
     requires SignalConcepts::ValidMethod<Method, Args...>
+    [[nodiscard("rvalue must be kept, else will auto disconnect immediatly.")]]
     Connection<Args...> connect(Method&& method) noexcept
     {
         idType id = this->getNewId();
@@ -210,17 +211,18 @@ public:
      * void main() {
      *  Signal<int> s;
      *  Foo foo;
-     *  s.connect(&foo, &Foo::f);
+     *  Connection c = s.connect(&foo, &Foo::f);
      * }
      * @endcode
      */
     template<typename T, typename Method>
     requires SignalConcepts::ValidClassMethod<T, Method, Args...>
+    [[nodiscard("rvalue must be kept, else will auto disconnect immediatly.")]]
     Connection<Args...> connect(T* instance, Method&& method) noexcept
     {
-        auto bound = [instance, method](Args... args) -> void {(instance->*method)(args...);};
+        auto bound = [instance, method](Args... args) -> void { (instance->*method)(args...); };
 
-        return connect(bound);
+        return connect(std::move(bound));
     }
 
     /**
@@ -237,12 +239,13 @@ public:
      * void main() {
      *  Signal<int> s;
      *  std::shared_ptr<Foo> foo = std::make_shared<Foo>();
-     *  s.connect(foo, &Foo::f);
+     *  Connection c = s.connect(foo, &Foo::f);
      * }
      * @endcode
      */
     template<typename T, typename Method>
     requires SignalConcepts::ValidClassMethod<T, Method, Args...>
+    [[nodiscard("rvalue must be kept, else will auto disconnect immediatly.")]]
     Connection<Args...> connect(std::shared_ptr<T>& instance, Method&& method) noexcept
     {
         std::weak_ptr<T> wp(instance);
@@ -269,8 +272,8 @@ public:
 
     /**
      * @brief Connect a method and bound its aguments from left to right.
-     * @param method Free method or lambda. Must return void and have parameters to bind and then the same parameters as the signal.
-     * @param boundArgs Values to bound arguments to.
+     * @param method Static method or lambda. Must return void and have parameters to bind and then the same parameters as the signal.
+     * @param boundArgs Values to bound arguments to. Be aware that if you want to bound a ref you should cast it explicitly with std::ref().
      * @return A @ref Connection. Must be kept or the signal might be automatically disconected.
      *
      * @code{.cpp}
@@ -279,16 +282,17 @@ public:
      * void main() {
      *  Signal<int> s;
      *  Foo foo;
-     *  s.connect(&f, "bar");
+     *  Connection c = s.connect(&f, "bar");
      *  //or
-     *  s.connect(f, "bar");
+     *  Connection c = s.connect(f, "bar");
      *  //or
-     *  s.connect([](int){ ... }, "bar");
+     *  Connection c = s.connect([](int){ ... }, "bar");
      * }
      * @endcode
      */
     template<typename Method, typename... BoundArgs>
     requires SignalConcepts::ValidMethod<Method, BoundArgs..., Args...>
+    [[nodiscard("rvalue must be kept, else will auto disconnect immediatly.")]]
     Connection<Args...> connect(Method&& method, BoundArgs&&... boundArgs) noexcept
     {
         auto bound = std::bind_front(method, std::forward<BoundArgs>(boundArgs)...);
@@ -299,7 +303,7 @@ public:
      * @brief Connect a class method and bound its aguments from left to right.
      * @param instance Class instance.
      * @param method Class method. Must return void and have parameters to bind and then the same parameters as the signal.
-     * @param boundArgs Values to bound arguments to.
+     * @param boundArgs Values to bound arguments to. Be aware that if you want to bound a ref you should cast it explicitly with std::ref().
      * @return A @ref Connection. Must be kept or the signal might be automatically disconected.
      *
      * @code{.cpp}
@@ -310,12 +314,13 @@ public:
      * void main() {
      *  Signal<int> s;
      *  Foo foo;
-     *  s.connect(&foo, &foo::f, "bar");
+     *  Connection c = s.connect(&foo, &foo::f, "bar");
      * }
      * @endcode
      */
     template<typename T, typename Method, typename... BoundArgs>
     requires SignalConcepts::ValidClassMethod<T, Method, BoundArgs..., Args...>
+    [[nodiscard("rvalue must be kept, else will auto disconnect immediatly.")]]
     Connection<Args...> connect(T* instance, Method&& method, BoundArgs&&... boundArgs)
     {
         auto bound = std::bind_front(method, instance, std::forward<BoundArgs>(boundArgs)...);
@@ -327,7 +332,7 @@ public:
      *  Will auto disconnect if instance is not valid anymore.
      * @param instance Shared pointer to class instance.
      * @param method Class method. Must return void and have parameters to bind and then the same parameters as the signal.
-     * @param boundArgs Values to bound arguments to.
+     * @param boundArgs Values to bound arguments to. Be aware that if you want to bound a ref you should cast it explicitly with std::ref().
      * @return A @ref Connection. Must be kept or the signal might be automatically disconected.
      *
      * @code{.cpp}
@@ -338,12 +343,13 @@ public:
      * void main() {
      *  Signal<int> s;
      *  std::shared_ptr<Foo> foo = std::make_shared<Foo>();
-     *  s.connect(foo, &foo::f, "bar");
+     *  Connection c = s.connect(foo, &foo::f, "bar");
      * }
      * @endcode
      */
     template<typename T, typename Method, typename... BoundArgs>
     requires SignalConcepts::ValidClassMethod<T, Method, BoundArgs..., Args...>
+    [[nodiscard("rvalue must be kept, else will auto disconnect immediatly.")]]
     Connection<Args...> connect(std::shared_ptr<T>& instance, Method&& method, BoundArgs&&... boundArgs)
     {
         std::weak_ptr<T> wp(instance);
@@ -448,7 +454,7 @@ private:
     /**
      * @brief Add a method to be called by next @ref Signal::emit().
      * @param id Id of the method.
-     * @param method Free function or lambda.
+     * @param method Static function or lambda.
      */
     template <typename Method>
     void addMethod(const idType id, Method&& method)
