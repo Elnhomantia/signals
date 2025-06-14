@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['operator_3d_0',['operator=',['../class_connection.html#a6ff309d3b9034303f343f3c9a8af19c0',1,'Connection::operator=(const Connection &amp;)=delete'],['../class_connection.html#aa5227e372e1f415538422190563ddf34',1,'Connection::operator=(Connection &amp;&amp;other) noexcept']]]
+  ['foo_0',['Foo',['../d4/dd5/class_foo.html',1,'']]],
+  ['func_1',['func',['../dd/d60/struct_signal_1_1_method_type.html#ace2b48a4638268486c64838710b8405e',1,'Signal::MethodType']]]
 ];

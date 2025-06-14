@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['testbindfree_0',['testBindFree',['../main_8cpp.html#a8b014afeb8cbe1e7a496274dd86f013e',1,'main.cpp']]],
-  ['testfree_1',['testFree',['../main_8cpp.html#a4f40300c4dbe8460b8f0decf503633e0',1,'main.cpp']]]
+  ['id_0',['id',['../dd/d10/class_connection.html#a2c6194c5484213483c7db14f8a7a04cd',1,'Connection']]],
+  ['idtype_1',['idType',['../dd/d10/class_connection.html#a7a043ea8db0f131f1eb6936b36f97c50',1,'Connection::idType()'],['../dc/d20/class_signal.html#a54dd9f6e3472652368bdf6c3374aaca8',1,'Signal::idType()']]],
+  ['isblocked_2',['isBlocked',['../dd/d60/struct_signal_1_1_method_type.html#aaa418598cd08fc90f98c3697f0a72306',1,'Signal::MethodType']]]
 ];
