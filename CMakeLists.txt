@@ -5,10 +5,9 @@ project(signals LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(signals
-    main.cpp
-    signal.h
-)
+
+
+add_library(signals INTERFACE signal.h macros.h)
 
 include(GNUInstallDirs)
 install(TARGETS signals

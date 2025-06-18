@@ -45,6 +45,7 @@ public:
      * @brief Deleted. No copy.
      */
     Connection & operator=(const Connection &) = delete;
+
     /**
      * @brief operator= Move operator.
      * @param other Another connection object. Will loose it's properties.
@@ -88,6 +89,7 @@ public:
     {
         this->sig->setBlocked(this->id, true);
     }
+
     /**
      * @brief Let you unblock a method so it will be called again during @ref Signal::emit().
      */
@@ -97,6 +99,7 @@ public:
     }
 
 private:
+
     /**
      * @brief Connection contructor for @ref Signal class.
      * @param s Signal.
@@ -479,5 +482,7 @@ private:
         }
     }
 };
+
+#include "macros.h"
 
 #endif // SIGNAL_H
