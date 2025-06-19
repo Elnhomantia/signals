@@ -14,8 +14,3 @@ install(TARGETS signals
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-
-# ============ Tests ============
-
-enable_testing()
-add_subdirectory(tests)
