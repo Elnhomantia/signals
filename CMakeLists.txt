@@ -12,6 +12,7 @@ install(TARGETS signals
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+<<<<<<< HEAD
 
 # ============ Tests ============
 
@@ -24,3 +25,5 @@ add_custom_target(check
 )
 
 add_dependencies(signals check)
+=======
+>>>>>>> 743a6bc (minimal release. Rebase for v1.1.0)
