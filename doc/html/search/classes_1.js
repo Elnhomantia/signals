@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['foo_0',['Foo',['../d4/dd5/class_foo.html',1,'']]]
+  ['methodtype_0',['MethodType',['../dd/d60/struct_signal_1_1_method_type.html',1,'Signal']]]
 ];

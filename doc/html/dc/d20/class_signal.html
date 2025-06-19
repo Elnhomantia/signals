@@ -100,7 +100,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a54d935cfeb7c8072bcd420e6174aeef8"><td class="memTemplParams" colspan="2">template&lt;typename Method &gt; <br />
 requires <a class="el" href="../../d1/d9d/concept_signal_concepts_1_1_valid_method.html">SignalConcepts::ValidMethod</a>&lt;Method, Args...&gt;</td></tr>
 <tr class="memitem:a54d935cfeb7c8072bcd420e6174aeef8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../dd/d10/class_connection.html">Connection</a>&lt; Args... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a> (Method &amp;&amp;method) noexcept</td></tr>
-<tr class="memdesc:a54d935cfeb7c8072bcd420e6174aeef8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect a free method or a lambda to a signal.  <br /></td></tr>
+<tr class="memdesc:a54d935cfeb7c8072bcd420e6174aeef8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect a static method or a lambda to a signal.  <br /></td></tr>
 <tr class="separator:a54d935cfeb7c8072bcd420e6174aeef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a625f01d1a2c554792ea83892cf8308ea"><td class="memTemplParams" colspan="2">template&lt;typename T , typename Method &gt; <br />
 requires <a class="el" href="../../d6/de5/concept_signal_concepts_1_1_valid_class_method.html">SignalConcepts::ValidClassMethod</a>&lt;T, Method, Args...&gt;</td></tr>
@@ -183,7 +183,7 @@ class Signal&lt; Args &gt;</div><p>The <a class="el" href="../../dc/d20/class_si
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00148">148</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00151">151</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a54dd9f6e3472652368bdf6c3374aaca8" name="a54dd9f6e3472652368bdf6c3374aaca8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a54dd9f6e3472652368bdf6c3374aaca8">&#9670;&#160;</a></span>idType</h2>
@@ -209,7 +209,7 @@ template&lt;typename... Args&gt; </div>
 
 <p>Alias for signal id type. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00154">154</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00157">157</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -286,12 +286,12 @@ template&lt;typename Method &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td>Id of the method. </td></tr>
-    <tr><td class="paramname">method</td><td>Free function or lambda. </td></tr>
+    <tr><td class="paramname">method</td><td>Static function or lambda. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00454">454</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00457">457</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -324,31 +324,30 @@ requires <a class="el" href="../../d1/d9d/concept_signal_concepts_1_1_valid_meth
 </table>
 </div><div class="memdoc">
 
-<p>Connect a free method or a lambda to a signal. </p>
+<p>Connect a static method or a lambda to a signal. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">method</td><td>Free method or lambda. </td></tr>
+    <tr><td class="paramname">method</td><td>Static method or lambda. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="../../dd/d10/class_connection.html">Connection</a>. Must be kept or the signal might be automatically disconected.</dd></dl>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> f(<span class="keywordtype">int</span>){ ... }</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="../../df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>() {</div>
+<div class="line"><span class="keywordtype">void</span> main() {</div>
 <div class="line"> <a class="code hl_class" href="../../dc/d20/class_signal.html">Signal&lt;int&gt;</a> s;</div>
-<div class="line"> <a class="code hl_class" href="../../d4/dd5/class_foo.html">Foo</a> foo;</div>
-<div class="line"> s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(&amp;f);</div>
+<div class="line"> Foo foo;</div>
+<div class="line"> <a class="code hl_class" href="../../dd/d10/class_connection.html">Connection</a> c = s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(&amp;f);</div>
 <div class="line"> <span class="comment">//or</span></div>
-<div class="line"> s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(f);</div>
+<div class="line"> <a class="code hl_class" href="../../dd/d10/class_connection.html">Connection</a> c = s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(f);</div>
 <div class="line"> <span class="comment">//or</span></div>
-<div class="line"> s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>([](<span class="keywordtype">int</span>){ ... });</div>
+<div class="line"> <a class="code hl_class" href="../../dd/d10/class_connection.html">Connection</a> c = s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>([](<span class="keywordtype">int</span>){ ... });</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_foo_html"><div class="ttname"><a href="../../d4/dd5/class_foo.html">Foo</a></div><div class="ttdef"><b>Definition:</b> <a href="../../df/d0a/main_8cpp_source.html#l00015">main.cpp:16</a></div></div>
-<div class="ttc" id="aclass_signal_html"><div class="ttname"><a href="../../dc/d20/class_signal.html">Signal</a></div><div class="ttdoc">The Signal class. This is the Qt way to make the observer/observable pattern.</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d39/signal_8h_source.html#l00148">signal.h:149</a></div></div>
-<div class="ttc" id="aclass_signal_html_a54d935cfeb7c8072bcd420e6174aeef8"><div class="ttname"><a href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">Signal::connect</a></div><div class="ttdeci">Connection&lt; Args... &gt; connect(Method &amp;&amp;method) noexcept</div><div class="ttdoc">Connect a free method or a lambda to a signal.</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d39/signal_8h_source.html#l00192">signal.h:192</a></div></div>
-<div class="ttc" id="amain_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="../../df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition:</b> <a href="../../df/d0a/main_8cpp_source.html#l00028">main.cpp:28</a></div></div>
+<div class="ttc" id="aclass_connection_html"><div class="ttname"><a href="../../dd/d10/class_connection.html">Connection</a></div><div class="ttdoc">The Connection class is a de-connection manager. It's a result of all connect function from Signal....</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d39/signal_8h_source.html#l00019">signal.h:20</a></div></div>
+<div class="ttc" id="aclass_signal_html"><div class="ttname"><a href="../../dc/d20/class_signal.html">Signal</a></div><div class="ttdoc">The Signal class. This is the Qt way to make the observer/observable pattern.</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d39/signal_8h_source.html#l00151">signal.h:152</a></div></div>
+<div class="ttc" id="aclass_signal_html_a54d935cfeb7c8072bcd420e6174aeef8"><div class="ttname"><a href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">Signal::connect</a></div><div class="ttdeci">Connection&lt; Args... &gt; connect(Method &amp;&amp;method) noexcept</div><div class="ttdoc">Connect a static method or a lambda to a signal.</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d39/signal_8h_source.html#l00195">signal.h:195</a></div></div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00192">192</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00195">195</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -394,25 +393,25 @@ requires <a class="el" href="../../d1/d9d/concept_signal_concepts_1_1_valid_meth
 <p>Connect a method and bound its aguments from left to right. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">method</td><td>Free method or lambda. Must return void and have parameters to bind and then the same parameters as the signal. </td></tr>
-    <tr><td class="paramname">boundArgs</td><td>Values to bound arguments to. </td></tr>
+    <tr><td class="paramname">method</td><td>Static method or lambda. Must return void and have parameters to bind and then the same parameters as the signal. </td></tr>
+    <tr><td class="paramname">boundArgs</td><td>Values to bound arguments to. Be aware that if you want to bound a ref you should cast it explicitly with std::ref(). </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="../../dd/d10/class_connection.html">Connection</a>. Must be kept or the signal might be automatically disconected.</dd></dl>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> f(<span class="keywordtype">string</span>, <span class="keywordtype">int</span>){ ... }</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="../../df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>() {</div>
+<div class="line"><span class="keywordtype">void</span> main() {</div>
 <div class="line"> <a class="code hl_class" href="../../dc/d20/class_signal.html">Signal&lt;int&gt;</a> s;</div>
-<div class="line"> <a class="code hl_class" href="../../d4/dd5/class_foo.html">Foo</a> foo;</div>
-<div class="line"> s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(&amp;f, <span class="stringliteral">&quot;bar&quot;</span>);</div>
+<div class="line"> Foo foo;</div>
+<div class="line"> <a class="code hl_class" href="../../dd/d10/class_connection.html">Connection</a> c = s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(&amp;f, <span class="stringliteral">&quot;bar&quot;</span>);</div>
 <div class="line"> <span class="comment">//or</span></div>
-<div class="line"> s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(f, <span class="stringliteral">&quot;bar&quot;</span>);</div>
+<div class="line"> <a class="code hl_class" href="../../dd/d10/class_connection.html">Connection</a> c = s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(f, <span class="stringliteral">&quot;bar&quot;</span>);</div>
 <div class="line"> <span class="comment">//or</span></div>
-<div class="line"> s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>([](<span class="keywordtype">int</span>){ ... }, <span class="stringliteral">&quot;bar&quot;</span>);</div>
+<div class="line"> <a class="code hl_class" href="../../dd/d10/class_connection.html">Connection</a> c = s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>([](<span class="keywordtype">int</span>){ ... }, <span class="stringliteral">&quot;bar&quot;</span>);</div>
 <div class="line">}</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00292">292</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00295">295</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -464,17 +463,17 @@ requires <a class="el" href="../../d6/de5/concept_signal_concepts_1_1_valid_clas
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="../../dd/d10/class_connection.html">Connection</a>. Must be kept or the signal might be automatically disconected.</dd></dl>
-<div class="fragment"><div class="line"><span class="keyword">class </span><a class="code hl_class" href="../../d4/dd5/class_foo.html">Foo</a> {</div>
+<div class="fragment"><div class="line"><span class="keyword">class </span>Foo {</div>
 <div class="line"> <span class="keywordtype">void</span> f(<span class="keywordtype">int</span>){ ... }</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="../../df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>() {</div>
+<div class="line"><span class="keywordtype">void</span> main() {</div>
 <div class="line"> <a class="code hl_class" href="../../dc/d20/class_signal.html">Signal&lt;int&gt;</a> s;</div>
 <div class="line"> std::shared_ptr&lt;Foo&gt; foo = std::make_shared&lt;Foo&gt;();</div>
-<div class="line"> s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(foo, &amp;Foo::f);</div>
+<div class="line"> <a class="code hl_class" href="../../dd/d10/class_connection.html">Connection</a> c = s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(foo, &amp;Foo::f);</div>
 <div class="line">}</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00246">246</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00249">249</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -528,22 +527,22 @@ requires <a class="el" href="../../d6/de5/concept_signal_concepts_1_1_valid_clas
   <table class="params">
     <tr><td class="paramname">instance</td><td>Shared pointer to class instance. </td></tr>
     <tr><td class="paramname">method</td><td>Class method. Must return void and have parameters to bind and then the same parameters as the signal. </td></tr>
-    <tr><td class="paramname">boundArgs</td><td>Values to bound arguments to. </td></tr>
+    <tr><td class="paramname">boundArgs</td><td>Values to bound arguments to. Be aware that if you want to bound a ref you should cast it explicitly with std::ref(). </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="../../dd/d10/class_connection.html">Connection</a>. Must be kept or the signal might be automatically disconected.</dd></dl>
-<div class="fragment"><div class="line"><span class="keyword">class </span><a class="code hl_class" href="../../d4/dd5/class_foo.html">Foo</a> {</div>
+<div class="fragment"><div class="line"><span class="keyword">class </span>Foo {</div>
 <div class="line"> <span class="keywordtype">void</span> f(<span class="keywordtype">string</span>, <span class="keywordtype">int</span>){ ... }</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="../../df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>() {</div>
+<div class="line"><span class="keywordtype">void</span> main() {</div>
 <div class="line"> <a class="code hl_class" href="../../dc/d20/class_signal.html">Signal&lt;int&gt;</a> s;</div>
 <div class="line"> std::shared_ptr&lt;Foo&gt; foo = std::make_shared&lt;Foo&gt;();</div>
-<div class="line"> s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(foo, &amp;foo::f, <span class="stringliteral">&quot;bar&quot;</span>);</div>
+<div class="line"> <a class="code hl_class" href="../../dd/d10/class_connection.html">Connection</a> c = s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(foo, &amp;foo::f, <span class="stringliteral">&quot;bar&quot;</span>);</div>
 <div class="line">}</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00347">347</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00350">350</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -595,17 +594,17 @@ requires <a class="el" href="../../d6/de5/concept_signal_concepts_1_1_valid_clas
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="../../dd/d10/class_connection.html">Connection</a>. Must be kept or the signal might be automatically disconected.</dd></dl>
-<div class="fragment"><div class="line"><span class="keyword">class </span><a class="code hl_class" href="../../d4/dd5/class_foo.html">Foo</a> {</div>
+<div class="fragment"><div class="line"><span class="keyword">class </span>Foo {</div>
 <div class="line"> <span class="keywordtype">void</span> f(<span class="keywordtype">int</span>){ ... }</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="../../df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>() {</div>
+<div class="line"><span class="keywordtype">void</span> main() {</div>
 <div class="line"> <a class="code hl_class" href="../../dc/d20/class_signal.html">Signal&lt;int&gt;</a> s;</div>
-<div class="line"> <a class="code hl_class" href="../../d4/dd5/class_foo.html">Foo</a> foo;</div>
-<div class="line"> s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(&amp;foo, &amp;Foo::f);</div>
+<div class="line"> Foo foo;</div>
+<div class="line"> <a class="code hl_class" href="../../dd/d10/class_connection.html">Connection</a> c = s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(&amp;foo, &amp;Foo::f);</div>
 <div class="line">}</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00219">219</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00222">222</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -659,22 +658,22 @@ requires <a class="el" href="../../d6/de5/concept_signal_concepts_1_1_valid_clas
   <table class="params">
     <tr><td class="paramname">instance</td><td>Class instance. </td></tr>
     <tr><td class="paramname">method</td><td>Class method. Must return void and have parameters to bind and then the same parameters as the signal. </td></tr>
-    <tr><td class="paramname">boundArgs</td><td>Values to bound arguments to. </td></tr>
+    <tr><td class="paramname">boundArgs</td><td>Values to bound arguments to. Be aware that if you want to bound a ref you should cast it explicitly with std::ref(). </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="../../dd/d10/class_connection.html">Connection</a>. Must be kept or the signal might be automatically disconected.</dd></dl>
-<div class="fragment"><div class="line"><span class="keyword">class </span><a class="code hl_class" href="../../d4/dd5/class_foo.html">Foo</a> {</div>
+<div class="fragment"><div class="line"><span class="keyword">class </span>Foo {</div>
 <div class="line"> <span class="keywordtype">void</span> f(<span class="keywordtype">string</span>, <span class="keywordtype">int</span>){ ... }</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="../../df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>() {</div>
+<div class="line"><span class="keywordtype">void</span> main() {</div>
 <div class="line"> <a class="code hl_class" href="../../dc/d20/class_signal.html">Signal&lt;int&gt;</a> s;</div>
-<div class="line"> <a class="code hl_class" href="../../d4/dd5/class_foo.html">Foo</a> foo;</div>
-<div class="line"> s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(&amp;foo, &amp;foo::f, <span class="stringliteral">&quot;bar&quot;</span>);</div>
+<div class="line"> Foo foo;</div>
+<div class="line"> <a class="code hl_class" href="../../dd/d10/class_connection.html">Connection</a> c = s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a54d935cfeb7c8072bcd420e6174aeef8">connect</a>(&amp;foo, &amp;foo::f, <span class="stringliteral">&quot;bar&quot;</span>);</div>
 <div class="line">}</div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00319">319</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00322">322</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -712,7 +711,7 @@ template&lt;typename... Args&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00441">441</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00444">444</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -742,13 +741,13 @@ template&lt;typename... Args&gt; </div>
 </div><div class="memdoc">
 
 <p>disconnectAll Disconnect all methods </p>
-<div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="../../df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>() {</div>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> main() {</div>
 <div class="line"> <a class="code hl_class" href="../../dc/d20/class_signal.html">Signal&lt;int&gt;</a> s;</div>
 <div class="line"> s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a6904977cfedd86562dc3ec86a95b6db6">disconnectAll</a>();</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_signal_html_a6904977cfedd86562dc3ec86a95b6db6"><div class="ttname"><a href="../../dc/d20/class_signal.html#a6904977cfedd86562dc3ec86a95b6db6">Signal::disconnectAll</a></div><div class="ttdeci">void disconnectAll()</div><div class="ttdoc">disconnectAll Disconnect all methods</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d39/signal_8h_source.html#l00405">signal.h:405</a></div></div>
+<div class="ttc" id="aclass_signal_html_a6904977cfedd86562dc3ec86a95b6db6"><div class="ttname"><a href="../../dc/d20/class_signal.html#a6904977cfedd86562dc3ec86a95b6db6">Signal::disconnectAll</a></div><div class="ttdeci">void disconnectAll()</div><div class="ttdoc">disconnectAll Disconnect all methods</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d39/signal_8h_source.html#l00408">signal.h:408</a></div></div>
 </div><!-- fragment --> 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00405">405</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00408">408</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -781,17 +780,17 @@ template&lt;typename... Args&gt; </div>
 <p>emit Call all connected methods. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">args</td><td><a class="el" href="../../dc/d20/class_signal.html" title="The Signal class. This is the Qt way to make the observer/observable pattern.">Signal</a> parameters, same type as template. <div class="fragment"><div class="line"><span class="keywordtype">void</span> <a class="code hl_function" href="../../df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>() {</div>
+    <tr><td class="paramname">args</td><td><a class="el" href="../../dc/d20/class_signal.html" title="The Signal class. This is the Qt way to make the observer/observable pattern.">Signal</a> parameters, same type as template. <div class="fragment"><div class="line"><span class="keywordtype">void</span> main() {</div>
 <div class="line"> <a class="code hl_class" href="../../dc/d20/class_signal.html">Signal&lt;int&gt;</a> s;</div>
 <div class="line"> s.<a class="code hl_function" href="../../dc/d20/class_signal.html#a354c2adb8bf7c0ce0e63a5e875a8e4b5">emit</a>(1);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclass_signal_html_a354c2adb8bf7c0ce0e63a5e875a8e4b5"><div class="ttname"><a href="../../dc/d20/class_signal.html#a354c2adb8bf7c0ce0e63a5e875a8e4b5">Signal::emit</a></div><div class="ttdeci">void emit(Args... args)</div><div class="ttdoc">emit Call all connected methods.</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d39/signal_8h_source.html#l00382">signal.h:382</a></div></div>
+<div class="ttc" id="aclass_signal_html_a354c2adb8bf7c0ce0e63a5e875a8e4b5"><div class="ttname"><a href="../../dc/d20/class_signal.html#a354c2adb8bf7c0ce0e63a5e875a8e4b5">Signal::emit</a></div><div class="ttdeci">void emit(Args... args)</div><div class="ttdoc">emit Call all connected methods.</div><div class="ttdef"><b>Definition:</b> <a href="../../d8/d39/signal_8h_source.html#l00385">signal.h:385</a></div></div>
 </div><!-- fragment --> </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00382">382</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00385">385</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -823,7 +822,7 @@ template&lt;typename... Args&gt; </div>
 <p>Get next free id in a thread safe manner. </p>
 <dl class="section return"><dt>Returns</dt><dd>A free id. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00431">431</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00434">434</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -872,7 +871,7 @@ template&lt;typename... Args&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00466">466</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00469">469</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -899,7 +898,7 @@ template&lt;typename... Args&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00114">114</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00117">117</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -928,7 +927,7 @@ template&lt;typename... Args&gt; </div>
 
 <p>Store methods with an id for de-connection. Don't manipulate, use <a class="el" href="../../dc/d20/class_signal.html#a39e583e45be43db24fcf7349328005fc">Signal::addMethod(const idType id, Method&amp;&amp; method)</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00425">425</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00428">428</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -956,7 +955,7 @@ template&lt;typename... Args&gt; </div>
 
 <p>mtx Mutex for thread safety. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00420">420</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00423">423</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>
@@ -984,7 +983,7 @@ template&lt;typename... Args&gt; </div>
 
 <p>nextId The next id to use. Won't backtrack if a connection if deleted for example. Don't manipulate, use <a class="el" href="../../dc/d20/class_signal.html#ac09344c6d44e2ce8242f2d57ea8a6b32">Signal::getNewId()</a> </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00416">416</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d8/d39/signal_8h_source.html#l00419">419</a> of file <a class="el" href="../../d8/d39/signal_8h_source.html">signal.h</a>.</p>
 
 </div>
 </div>

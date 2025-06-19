@@ -16,7 +16,7 @@ class Signal;
  * @tparam Args Signal parameters.
  */
 template<typename... Args>
-class Connection
+class [[nodiscard ("rvalue must be kept, else will directly disconnect")]] Connection
 {
 friend class Signal<Args...>;
 using idType = Signal<Args...>::idType;
@@ -192,7 +192,6 @@ public:
      */
     template<typename Method>
     requires SignalConcepts::ValidMethod<Method, Args...>
-    [[nodiscard("rvalue must be kept, else will auto disconnect immediatly.")]]
     Connection<Args...> connect(Method&& method) noexcept
     {
         idType id = this->getNewId();
@@ -220,7 +219,6 @@ public:
      */
     template<typename T, typename Method>
     requires SignalConcepts::ValidClassMethod<T, Method, Args...>
-    [[nodiscard("rvalue must be kept, else will auto disconnect immediatly.")]]
     Connection<Args...> connect(T* instance, Method&& method) noexcept
     {
         auto bound = [instance, method](Args... args) -> void { (instance->*method)(args...); };
@@ -248,7 +246,6 @@ public:
      */
     template<typename T, typename Method>
     requires SignalConcepts::ValidClassMethod<T, Method, Args...>
-    [[nodiscard("rvalue must be kept, else will auto disconnect immediatly.")]]
     Connection<Args...> connect(std::shared_ptr<T>& instance, Method&& method) noexcept
     {
         std::weak_ptr<T> wp(instance);
@@ -295,7 +292,6 @@ public:
      */
     template<typename Method, typename... BoundArgs>
     requires SignalConcepts::ValidMethod<Method, BoundArgs..., Args...>
-    [[nodiscard("rvalue must be kept, else will auto disconnect immediatly.")]]
     Connection<Args...> connect(Method&& method, BoundArgs&&... boundArgs) noexcept
     {
         auto bound = std::bind_front(method, std::forward<BoundArgs>(boundArgs)...);
@@ -323,7 +319,6 @@ public:
      */
     template<typename T, typename Method, typename... BoundArgs>
     requires SignalConcepts::ValidClassMethod<T, Method, BoundArgs..., Args...>
-    [[nodiscard("rvalue must be kept, else will auto disconnect immediatly.")]]
     Connection<Args...> connect(T* instance, Method&& method, BoundArgs&&... boundArgs)
     {
         auto bound = std::bind_front(method, instance, std::forward<BoundArgs>(boundArgs)...);
@@ -352,7 +347,6 @@ public:
      */
     template<typename T, typename Method, typename... BoundArgs>
     requires SignalConcepts::ValidClassMethod<T, Method, BoundArgs..., Args...>
-    [[nodiscard("rvalue must be kept, else will auto disconnect immediatly.")]]
     Connection<Args...> connect(std::shared_ptr<T>& instance, Method&& method, BoundArgs&&... boundArgs)
     {
         std::weak_ptr<T> wp(instance);

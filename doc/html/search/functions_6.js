@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['main_0',['main',['../df/d0a/main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main.cpp']]]
+  ['operator_3d_0',['operator=',['../dd/d10/class_connection.html#a6ff309d3b9034303f343f3c9a8af19c0',1,'Connection::operator=(const Connection &amp;)=delete'],['../dd/d10/class_connection.html#aa5227e372e1f415538422190563ddf34',1,'Connection::operator=(Connection &amp;&amp;other) noexcept']]]
 ];
