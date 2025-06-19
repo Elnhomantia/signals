@@ -36,18 +36,3 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/signalsConfigVersion.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/signals
 )
-<<<<<<< HEAD
-
-# ============ Tests ============
-
-enable_testing()
-add_subdirectory(tests)
-
-add_custom_target(check
-    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-)
-
-add_dependencies(signals check)
-=======
->>>>>>> 743a6bc (minimal release. Rebase for v1.1.0)
