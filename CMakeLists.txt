@@ -12,18 +12,3 @@ install(TARGETS signals
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-<<<<<<< HEAD
-
-# ============ Tests ============
-
-enable_testing()
-add_subdirectory(tests)
-
-add_custom_target(check
-    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-)
-
-add_dependencies(signals check)
-=======
->>>>>>> 743a6bc (minimal release. Rebase for v1.1.0)
