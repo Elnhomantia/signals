@@ -4,8 +4,6 @@
 
 class Foo
 {
-    private_signal(sPri, int)
-    protected_signal(sPro, int)
     public_signal(sPub, int)
 
 public:
@@ -13,7 +11,7 @@ public:
 
     void emitSig()
     {
-        sPub_.emit(0);
+        sPub.emit(0);
     }
 
     void member(int i)

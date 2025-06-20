@@ -17,3 +17,10 @@ install(TARGETS signals
 
 enable_testing()
 add_subdirectory(tests)
+
+add_custom_target(check
+    COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+
+add_dependencies(signals check)
