@@ -6,8 +6,7 @@ var searchData=
   ['signal_2eh_3',['signal.h',['../d8/d39/signal_8h.html',1,'']]],
   ['signal_3c_20args_2e_2e_2e_20_3e_4',['Signal&lt; Args... &gt;',['../dc/d20/class_signal.html',1,'Signal&lt; Args... &gt;'],['../dd/d10/class_connection.html#a46695dd910f34a75d05b3f6c1fdfab1b',1,'Connection::Signal&lt; Args... &gt;()']]],
   ['signal_5fconnect_5fforward_5',['SIGNAL_CONNECT_FORWARD',['../de/d3c/macros_8h.html#adc523c52e9d5c028ed4be1ea355c1e73',1,'macros.h']]],
-  ['signal_5fconnect_5fforward_5fpure_5fvirtual_6',['SIGNAL_CONNECT_FORWARD_PURE_VIRTUAL',['../de/d3c/macros_8h.html#a2e5cf3c8b2e4e607d4fff16e43df5e0e',1,'macros.h']]],
-  ['signalconcepts_7',['SignalConcepts',['../db/d2c/namespace_signal_concepts.html',1,'']]],
-  ['validclassmethod_8',['ValidClassMethod',['../d6/de5/concept_signal_concepts_1_1_valid_class_method.html',1,'SignalConcepts']]],
-  ['validmethod_9',['ValidMethod',['../d1/d9d/concept_signal_concepts_1_1_valid_method.html',1,'SignalConcepts']]]
+  ['signalconcepts_6',['SignalConcepts',['../db/d2c/namespace_signal_concepts.html',1,'']]],
+  ['validclassmethod_7',['ValidClassMethod',['../d6/de5/concept_signal_concepts_1_1_valid_class_method.html',1,'SignalConcepts']]],
+  ['validmethod_8',['ValidMethod',['../d1/d9d/concept_signal_concepts_1_1_valid_method.html',1,'SignalConcepts']]]
 ];
