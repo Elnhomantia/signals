@@ -5,7 +5,7 @@ project(signals LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_library(signals INTERFACE include/signal.h include/macros.h)
+add_library(signals INTERFACE include/event_signal.h include/macros.h)
 target_include_directories(signals INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
@@ -18,7 +18,7 @@ install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 install(TARGETS signals EXPORT signalsTargets)
 install(EXPORT signalsTargets
     FILE signalsTargets.cmake
-    NAMESPACE signals::
+    NAMESPACE Elth::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/signals
 )
 write_basic_package_version_file(
@@ -42,9 +42,10 @@ install(FILES
 enable_testing()
 add_subdirectory(tests)
 
-add_custom_target(check
+#For whatever reason I need to compile multiple time for the compiler to do this goal ???
+#Even, after a clean it might fail, if I compile multiple times it works ?????
+add_custom_target(check ALL
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+    DEPENDS signals
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
-
-add_dependencies(signals check)

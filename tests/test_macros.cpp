@@ -1,4 +1,4 @@
-#include <signal.h>
+#include <event_signal.h>
 #include <cassert>
 #include <memory>
 

@@ -294,8 +294,12 @@ public:
     requires SignalConcepts::ValidMethod<Method, BoundArgs..., Args...>
     Connection<Args...> connect(Method&& method, BoundArgs&&... boundArgs) noexcept
     {
-        auto bound = std::bind_front(method, std::forward<BoundArgs>(boundArgs)...);
-        return connect(std::move(bound));
+        return connect(
+            [method = std::forward<Method>(method),
+            ... bound = std::forward<BoundArgs>(boundArgs)](Args... args) mutable {
+            std::invoke(method, bound..., std::forward<Args>(args)...);
+            }
+        );
     }
 
     /**
@@ -321,8 +325,13 @@ public:
     requires SignalConcepts::ValidClassMethod<T, Method, BoundArgs..., Args...>
     Connection<Args...> connect(T* instance, Method&& method, BoundArgs&&... boundArgs)
     {
-        auto bound = std::bind_front(method, instance, std::forward<BoundArgs>(boundArgs)...);
-        return connect(std::move(bound));
+        return connect(
+            [instance,
+             method = std::forward<Method>(method),
+             ... bound = std::forward<BoundArgs>(boundArgs)](Args&&... args) mutable {
+                std::invoke(method, instance, bound..., std::forward<Args>(args)...);
+            }
+        );
     }
 
     /**
