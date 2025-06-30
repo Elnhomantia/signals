@@ -21,6 +21,7 @@ install(EXPORT signalsTargets
     NAMESPACE signals::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/signals
 )
+
 write_basic_package_version_file(
     ${CMAKE_CURRENT_BINARY_DIR}/signalsConfigVersion.cmake
     VERSION 1.1.2
