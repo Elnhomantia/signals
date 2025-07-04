@@ -13,8 +13,8 @@ set(TEST_SOURCES
 foreach(test_file IN LISTS TEST_SOURCES)
     get_filename_component(file_name ${test_file} NAME_WE)
     add_executable(${file_name} ${test_file})
-    target_include_directories(${file_name} PRIVATE ${CMAKE_SOURCE_DIR})
-    target_link_libraries(${file_name} PRIVATE signals)
+    target_link_libraries(${file_name} PRIVATE Signals)
+    target_include_directories(${file_name} PRIVATE ${CMAKE_SOURCE_DIR}/include)
     add_test(NAME ${file_name} COMMAND ${file_name})
 endforeach()
 

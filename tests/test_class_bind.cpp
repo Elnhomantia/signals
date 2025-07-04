@@ -1,4 +1,4 @@
-#include <event_signal.h>
+#include <signals.h>
 #include <cassert>
 
 class Foo
