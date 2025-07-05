@@ -43,8 +43,6 @@ include(CTest)
 enable_testing()
 add_subdirectory(tests)
 
-#For whatever reason I need to compile multiple time for the compiler to do this goal ???
-#Even, after a clean it might fail, if I compile multiple times it works ?????
 add_custom_target(check ALL
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
     DEPENDS signals tests_all
