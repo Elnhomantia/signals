@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(signals LANGUAGES CXX)
+project(signals VERSION 1.1.3 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_library(Signals INTERFACE include/signals.h include/macros.h)
-target_include_directories(Signals INTERFACE
+add_library(signals INTERFACE include/signals.h include/macros.h)
+target_include_directories(signals INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include/Elth/signals>
 )
@@ -15,7 +15,7 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Elth/signals)
-install(TARGETS Signals EXPORT signalsTargets)
+install(TARGETS signals EXPORT signalsTargets)
 install(EXPORT signalsTargets
     FILE signalsTargets.cmake
     NAMESPACE Elth::
@@ -23,7 +23,7 @@ install(EXPORT signalsTargets
 )
 write_basic_package_version_file(
     ${CMAKE_CURRENT_BINARY_DIR}/signalsConfigVersion.cmake
-    VERSION 1.1.2
+    VERSION ${PROJECT_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
 configure_package_config_file(
@@ -36,12 +36,6 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/signalsConfigVersion.cmake
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/signals
 )
-#move sources file -> #include<Elth/signals/*.h>
-install(FILES
-    include/event_signal.h
-    include/macros.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Elth/signals
-)
 
 # ============ Tests ============
 
@@ -53,6 +47,6 @@ add_subdirectory(tests)
 #Even, after a clean it might fail, if I compile multiple times it works ?????
 add_custom_target(check ALL
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-    DEPENDS Signals
+    DEPENDS signals tests_all
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )

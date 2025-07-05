@@ -196,7 +196,7 @@ public:
     {
         idType id = this->getNewId();
         this->addMethod(id, std::move(method));
-        return Connection(this, id);
+        return Connection<Args...>(this, id);
     }
 
     /**
